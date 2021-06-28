@@ -44,7 +44,7 @@ func LoadConfigFromFileSystem() (config.Config, error) {
 	return config, err
 }
 
-func WriteConfigToFileSystem(config *config.Config) int {
+func WriteUpdatedConfigToFileSystem(config *config.Config) int {
 	configFile, err := os.OpenFile(configFile(), os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0755)
 	if err != nil {
 		fmt.Println("cannot open 'config.json'")

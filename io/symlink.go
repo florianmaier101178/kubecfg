@@ -14,6 +14,21 @@ func CreateConfigProjectSymlink() int {
 	return createSymlink(unselectedProjectFile(), configSymlink())
 }
 
+func UpdateConfigProjectSymlinkToUnselected() int {
+	if !existingPath(configDir()) {
+		fmt.Printf("project config directory '%s' is not existing\n", configDir())
+		return 1
+	}
+
+	os.Remove(configSymlink())
+	return createSymlink(unselectedProjectFile(), configSymlink())
+}
+
+func UpdateConfigProjectSymlink(projectName string) int {
+	os.Remove(configSymlink())
+	return createSymlink(projectSymlink(projectName), configSymlink())
+}
+
 func createSymlink(target string, symlink string) int {
 	err := os.Symlink(target, symlink)
 	if err != nil {

@@ -42,7 +42,7 @@ func TestAddProject(t *testing.T) {
 	t.Run("verify existence of added project", func(t *testing.T) {
 		projectName := "business"
 
-		context, _ := c.existingProject(projectName)
+		context, _ := c.ExistingProject(projectName)
 		if !context {
 			t.Errorf("project not existing in contexts of project")
 		}
@@ -81,7 +81,7 @@ func TestAddProjectForMultipleProjectsExisting(t *testing.T) {
 	t.Run("verify existence of added project", func(t *testing.T) {
 		projectName := "example"
 
-		project, _ := c.existingProject(projectName)
+		project, _ := c.ExistingProject(projectName)
 		if !project {
 			t.Errorf("project not existing projects of config")
 		}
@@ -103,7 +103,7 @@ func TestRemoveProject(t *testing.T) {
 	t.Run("verify that context is not existent in contexts", func(t *testing.T) {
 		projectName := "business"
 
-		project, _ := c.existingProject(projectName)
+		project, _ := c.ExistingProject(projectName)
 		if project {
 			t.Errorf("project existing in projects of config")
 		}
@@ -147,7 +147,7 @@ func TestRemoveProjectNotPossibleIfNoMatchingProjectExists(t *testing.T) {
 	t.Run("verify that project is not existent in projects", func(t *testing.T) {
 		expected := "business"
 
-		context, _ := c.existingProject(expected)
+		context, _ := c.ExistingProject(expected)
 		if !context {
 			t.Errorf("project not existing in projects of config")
 		}
@@ -169,7 +169,7 @@ func TestRemoveProjectWithMultipleProjectsExisting(t *testing.T) {
 	t.Run("verify that context is not existent in contexts", func(t *testing.T) {
 		projectName := "business"
 
-		context, _ := c.existingProject(projectName)
+		context, _ := c.ExistingProject(projectName)
 		if context {
 			t.Errorf("project existing in projects of config")
 		}
@@ -205,7 +205,7 @@ func TestIsProjectSelected(t *testing.T) {
 
 func TestUnselectProject(t *testing.T) {
 	config := configWithSelectedProject("business")
-	config.unselectProject()
+	config.UnselectProject()
 	expected := "unselected"
 
 	if config.SelectedProject != expected {
@@ -215,7 +215,7 @@ func TestUnselectProject(t *testing.T) {
 
 func TestUnselectProjectForAlreadyUnselectedProject(t *testing.T) {
 	config := configWithAddedProject("business")
-	config.unselectProject()
+	config.UnselectProject()
 	expected := "unselected"
 
 	if config.SelectedProject != expected {

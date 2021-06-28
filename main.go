@@ -24,6 +24,12 @@ func main() {
 		"project add": func() (cli.Command, error) {
 			return &command.ProjectAddCommand{}, nil
 		},
+		"project select": func() (cli.Command, error) {
+			return &command.ProjectSelectCommand{}, nil
+		},
+		"project unselect": func() (cli.Command, error) {
+			return &command.ProjectUnselectCommand{}, nil
+		},
 		"version": func() (cli.Command, error) {
 			return &command.VersionCommand{
 				Version: version,

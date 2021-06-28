@@ -59,7 +59,7 @@ func (p *ProjectAddCommand) Run(args []string) int {
 		return 1
 	}
 
-	exitStatus = io.WriteConfigToFileSystem(updatedConfig)
+	exitStatus = io.WriteUpdatedConfigToFileSystem(updatedConfig)
 	if exitStatus > 0 {
 		return exitStatus
 	}
