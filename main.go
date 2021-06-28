@@ -18,6 +18,9 @@ func main() {
 		"init": func() (cli.Command, error) {
 			return &command.InitCommand{}, nil
 		},
+		"project": func() (cli.Command, error) {
+			return &command.ProjectCommand{}, nil
+		},
 		"version": func() (cli.Command, error) {
 			return &command.VersionCommand{
 				Version: version,
