@@ -77,7 +77,7 @@ func projectWithMultipleContexts() *Project {
 	return p
 }
 
-func TestAddContextForMultipleContextsExistent(t *testing.T) {
+func TestAddContextForMultipleContextsExisting(t *testing.T) {
 	p := projectWithMultipleContexts()
 	p.AddContext("prod")
 
@@ -121,7 +121,29 @@ func TestRemoveContext(t *testing.T) {
 	})
 }
 
-func TestRemoveContextNotPossibleIfNoMatchingContextExisting(t *testing.T) {
+func TestRemoveSelectedContext(t *testing.T) {
+	p := projectWithAddedContext("dev")
+	p.AddContext("int")
+	p.SelectContext("dev")
+	p.RemoveContext("dev")
+
+	if p.SelectedContext != unselected {
+		t.Errorf("context '%v' is the selected context", p.SelectedContext)
+	}
+}
+
+func TestRemoveUnselectedContext(t *testing.T) {
+	p := projectWithAddedContext("dev")
+	p.AddContext("int")
+	p.SelectContext("dev")
+	p.RemoveContext("int")
+
+	if p.SelectedContext != "dev" {
+		t.Errorf("context '%v' is the selected context", p.SelectedContext)
+	}
+}
+
+func TestRemoveContextNotPossibleIfNoMatchingContextExists(t *testing.T) {
 	p := projectWithAddedContext("dev")
 	p.RemoveContext("int")
 
@@ -143,7 +165,7 @@ func TestRemoveContextNotPossibleIfNoMatchingContextExisting(t *testing.T) {
 	})
 }
 
-func TestRemoveContextWithMultipleContextsExistent(t *testing.T) {
+func TestRemoveContextWithMultipleContextsExisting(t *testing.T) {
 	p := projectWithMultipleContexts()
 	p.RemoveContext("stable")
 
@@ -163,4 +185,73 @@ func TestRemoveContextWithMultipleContextsExistent(t *testing.T) {
 			t.Errorf("context existing in contexts of project")
 		}
 	})
+}
+
+func projectWithSelectedContext(context Context) *Project {
+	p := projectWithAddedContext("dev")
+	p.SelectedContext = "dev"
+	return p
+}
+
+func TestIsContextSelected(t *testing.T) {
+	devSelected := projectWithSelectedContext("dev")
+	devSelected.AddContext("int")
+
+	t.Run("context is selected", func(t *testing.T) {
+		var expected Context = "dev"
+
+		if !devSelected.isContextSelected(expected) {
+			t.Errorf("context '%v' is not the selected context", expected)
+		}
+	})
+
+	t.Run("context is not selected", func(t *testing.T) {
+		var expected Context = "int"
+
+		if devSelected.isContextSelected(expected) {
+			t.Errorf("context '%v' is the selected context", expected)
+		}
+	})
+}
+
+func TestUnselectContext(t *testing.T) {
+	project := projectWithSelectedContext("dev")
+	project.unselectContext()
+	var expected Context = "unselected"
+
+	if project.SelectedContext != expected {
+		t.Errorf("got %v, but expected %v", project.SelectedContext, expected)
+	}
+}
+
+func TestUnselectContextForAlreadyUnselectedContext(t *testing.T) {
+	project := projectWithAddedContext("dev")
+	project.unselectContext()
+	var expected Context = "unselected"
+
+	if project.SelectedContext != expected {
+		t.Errorf("got %v, but expected %v", project.SelectedContext, expected)
+	}
+}
+
+func TestSelectContext(t *testing.T) {
+	project := projectWithMultipleContexts()
+	project.SelectContext("stable")
+
+	var expected Context = "stable"
+
+	if project.SelectedContext != expected {
+		t.Errorf("got %v, but expected %v", project.SelectedContext, expected)
+	}
+}
+
+func TestSelectedContextNotPossibleIfContextNotExisting(t *testing.T) {
+	project := projectWithMultipleContexts()
+	expected := "given context: 'prod' not existing for project: 'business'"
+
+	_, err := project.SelectContext("prod")
+
+	if err.Error() != expected {
+		t.Errorf("got \"%s\", but expected: \"%s\" ", expected, err.Error())
+	}
 }

@@ -31,12 +31,17 @@ func (p *Project) AddContext(context Context) (*Project, error) {
 		fmt.Sprintf("context: '%s' already existing for project: '%s'", context, p.Name))
 }
 
-func (p *Project) RemoveContext(context Context) *Project {
+func (p *Project) RemoveContext(context Context) (*Project, error) {
 	existingContext, i := p.existingContext(context)
 	if existingContext {
 		p.Contexts = append(p.Contexts[:i], p.Contexts[i+1:]...)
+		if p.SelectedContext == context {
+			p.unselectContext()
+		}
+		return p, nil
 	}
-	return p
+	return p, errors.New(
+		fmt.Sprintf("given context: '%s' not existing for project: '%s'", context, p.Name))
 }
 
 func (p *Project) existingContext(context Context) (bool, int) {
@@ -48,4 +53,28 @@ func (p *Project) existingContext(context Context) (bool, int) {
 		}
 	}
 	return false, -1
+}
+
+func (p *Project) isContextSelected(context Context) bool {
+	if p.SelectedContext == context {
+		return true
+	}
+	return false
+}
+
+func (p *Project) SelectContext(context Context) (*Project, error)  {
+	existingContext, _ := p.existingContext(context)
+	if existingContext {
+		p.SelectedContext = context
+		return p, nil
+	}
+	return p, errors.New(
+		fmt.Sprintf("given context: '%s' not existing for project: '%s'", context, p.Name))
+}
+
+func (p *Project) unselectContext() *Project {
+	if p.SelectedContext != unselected {
+		p.SelectedContext = unselected
+	}
+	return p
 }

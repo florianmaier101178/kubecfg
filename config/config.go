@@ -29,12 +29,16 @@ func (c *Config) AddProject(project Project) (*Config, error) {
 		fmt.Sprintf("project: '%s' already existing in config", project.Name))
 }
 
-func (c *Config) RemoveProject(projectName string) *Config {
+func (c *Config) RemoveProject(projectName string) (*Config, error) {
 	existingProject, i := c.existingProject(projectName)
 	if existingProject {
 		c.Projects = append(c.Projects[:i], c.Projects[i+1:]...)
+		if c.SelectedProject == projectName {
+			c.unselectProject()
+		}
 	}
-	return c
+	return c, errors.New(
+		fmt.Sprintf("given project: '%s' not existing in config", projectName))
 }
 
 func (c *Config) existingProject(projectName string) (bool, int) {
@@ -46,4 +50,28 @@ func (c *Config) existingProject(projectName string) (bool, int) {
 		}
 	}
 	return false, -1
+}
+
+func (c *Config) isProjectSelected(projectName string) bool {
+	if c.SelectedProject == projectName {
+		return true
+	}
+	return false
+}
+
+func (c *Config) SelectProject(projectName string) (*Config, error)  {
+	existingProject, _ := c.existingProject(projectName)
+	if existingProject {
+		c.SelectedProject = projectName
+		return c, nil
+	}
+	return c, errors.New(
+		fmt.Sprintf("given project: '%s' not existing in config", projectName))
+}
+
+func (c *Config) unselectProject() *Config {
+	if c.SelectedProject != unselected {
+		c.SelectedProject = unselected
+	}
+	return c
 }
