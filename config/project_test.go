@@ -38,13 +38,6 @@ func projectWithAddedContext(context Context) *Project {
 	return p
 }
 
-func projectWithMultipleContexts() *Project {
-	p := projectWithAddedContext("dev")
-	p.AddContext("int")
-	p.AddContext("stable")
-	return p
-}
-
 func TestAddContext(t *testing.T) {
 	p := projectWithAddedContext("dev")
 
@@ -75,6 +68,13 @@ func TestAddContextNotPossibleIfContextAlreadyExisting(t *testing.T) {
 	if err.Error() != expected {
 		t.Errorf("got \"%s\", but expected: \"%s\" ", expected, err.Error())
 	}
+}
+
+func projectWithMultipleContexts() *Project {
+	p := projectWithAddedContext("dev")
+	p.AddContext("int")
+	p.AddContext("stable")
+	return p
 }
 
 func TestAddContextForMultipleContextsExistent(t *testing.T) {

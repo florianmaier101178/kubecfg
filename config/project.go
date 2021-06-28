@@ -5,8 +5,6 @@ import (
 	"fmt"
 )
 
-const unselected = "unselected"
-
 type Context string
 
 type Project struct {
