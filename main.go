@@ -27,6 +27,9 @@ func main() {
 		"project select": func() (cli.Command, error) {
 			return &command.ProjectSelectCommand{}, nil
 		},
+		"project show": func() (cli.Command, error) {
+			return &command.ProjectShowCommand{}, nil
+		},
 		"project unselect": func() (cli.Command, error) {
 			return &command.ProjectUnselectCommand{}, nil
 		},

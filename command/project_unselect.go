@@ -23,7 +23,7 @@ func (p *ProjectUnselectCommand) Run(args []string) int {
 		fmt.Println(p.Help())
 		return 1
 	}
-	fmt.Println("unselect project choice")
+	fmt.Println("project select unset")
 
 	if io.IllegalConfigurationSetup() {
 		fmt.Println("kubecfg is not properly configured")
