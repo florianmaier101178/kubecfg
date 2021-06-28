@@ -1,15 +1,29 @@
 package main
 
 import (
+	"kubecfg/command"
 	"log"
 	"os"
 
 	"github.com/mitchellh/cli"
 )
 
+const version = "1.0.0"
+
 func main() {
-	c := cli.NewCLI("kubecfg", "1.0.0")
+	c := cli.NewCLI("kubecfg", version)
 	c.Args = os.Args[1:]
+
+	c.Commands = map[string]cli.CommandFactory{
+		"init": func() (cli.Command, error) {
+			return &command.InitCommand{}, nil
+		},
+		"version": func() (cli.Command, error) {
+			return &command.VersionCommand{
+				Version: version,
+			}, nil
+		},
+	}
 
 	exitStatus, err := c.Run()
 	if err != nil {
