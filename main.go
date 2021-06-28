@@ -24,6 +24,9 @@ func main() {
 		"project add": func() (cli.Command, error) {
 			return &command.ProjectAddCommand{}, nil
 		},
+		"project list": func() (cli.Command, error) {
+			return &command.ProjectListCommand{}, nil
+		},
 		"project select": func() (cli.Command, error) {
 			return &command.ProjectSelectCommand{}, nil
 		},

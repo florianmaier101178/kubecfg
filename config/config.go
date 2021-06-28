@@ -8,8 +8,8 @@ import (
 const unselected = "unselected"
 
 type Config struct {
-	SelectedProject string
-	Projects        []Project
+	SelectedProject string    `json:"selectedProject"`
+	Projects        []Project `json:"projects"`
 }
 
 func NewConfig() *Config {
@@ -59,7 +59,7 @@ func (c *Config) isProjectSelected(projectName string) bool {
 	return false
 }
 
-func (c *Config) SelectProject(projectName string) (*Config, error)  {
+func (c *Config) SelectProject(projectName string) (*Config, error) {
 	existingProject, _ := c.ExistingProject(projectName)
 	if existingProject {
 		c.SelectedProject = projectName
@@ -74,4 +74,15 @@ func (c *Config) UnselectProject() *Config {
 		c.SelectedProject = unselected
 	}
 	return c
+}
+
+func (c *Config) GetProjectNames() []string {
+	if len(c.Projects) > 0 {
+		projectNames := make([]string, 0)
+		for _, project := range c.Projects {
+			projectNames = append(projectNames, project.Name)
+		}
+		return projectNames
+	}
+	return make([]string, 0)
 }

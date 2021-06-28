@@ -8,9 +8,9 @@ import (
 type Context string
 
 type Project struct {
-	Name            string
-	SelectedContext Context
-	Contexts        []Context
+	Name            string    `json:"name"`
+	SelectedContext Context   `json:"selectedContext"`
+	Contexts        []Context `json:"contexts"`
 }
 
 func NewProject(name string) *Project {
@@ -62,7 +62,7 @@ func (p *Project) isContextSelected(context Context) bool {
 	return false
 }
 
-func (p *Project) SelectContext(context Context) (*Project, error)  {
+func (p *Project) SelectContext(context Context) (*Project, error) {
 	existingContext, _ := p.existingContext(context)
 	if existingContext {
 		p.SelectedContext = context
