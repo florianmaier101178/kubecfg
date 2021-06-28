@@ -6,6 +6,10 @@ import (
 	"os"
 )
 
+func IllegalConfigurationSetup() bool {
+	return !existingPath(configDir()) || !existingPath(configFile())
+}
+
 func configDir() string {
 	home, err := os.UserHomeDir()
 	if err != nil {
@@ -26,9 +30,21 @@ func configSymlink() string {
 	return fmt.Sprintf("%s/config", configDir())
 }
 
-func existingDir(name string) bool {
+func projectDir(projectName string) string {
+	return fmt.Sprintf("%s/%s", configDir(), projectName)
+}
+
+func existingPath(name string) bool {
 	if _, err := os.Stat(name); err == nil {
 		return true
 	}
 	return false
+}
+
+func unselectedContextFile(projectName string) string {
+	return fmt.Sprintf("%s/%s/unselected", configDir(), projectName)
+}
+
+func projectSymlink(projectName string) string {
+	return fmt.Sprintf("%s/%s/config_%s", configDir(), projectName, projectName)
 }

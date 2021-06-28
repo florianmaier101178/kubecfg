@@ -33,7 +33,7 @@ func (i *InitCommand) Run(args []string) int {
 		return exitStatus
 	}
 
-	exitStatus = io.CreateProjectSymlink()
+	exitStatus = io.CreateConfigProjectSymlink()
 	if exitStatus > 0 {
 		return exitStatus
 	}

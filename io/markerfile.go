@@ -6,7 +6,7 @@ import (
 )
 
 func CreateUnselectedProjectMarkerFile() int {
-	if !existingDir(configDir()) {
+	if !existingPath(configDir()) {
 		fmt.Printf("config directory '%s' is not existing\n", configDir())
 		return 1
 	}
@@ -23,4 +23,17 @@ func createMarkerFile(name string) int {
 	defer markerFile.Close()
 
 	return 0
+}
+
+func CreateUnselectedContextMarkerFile(projectName string) int {
+	if !existingPath(configDir()) {
+		fmt.Printf("config directory '%s' is not existing\n", configDir())
+		return 1
+	}
+	if !existingPath(projectDir(projectName)) {
+		fmt.Printf("project config directory '%s' is not existing\n", projectDir(projectName))
+		return 1
+	}
+
+	return createMarkerFile(fmt.Sprintf("%s/unselected", projectDir(projectName)))
 }

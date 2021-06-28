@@ -5,10 +5,9 @@ import (
 	"os"
 )
 
-func CreateProjectSymlink() int {
-	projectDir := fmt.Sprintf("%s", configDir())
-	if !existingDir(projectDir) {
-		fmt.Printf("project config directory '%s' is not existing\n", projectDir)
+func CreateConfigProjectSymlink() int {
+	if !existingPath(configDir()) {
+		fmt.Printf("project config directory '%s' is not existing\n", configDir())
 		return 1
 	}
 
@@ -23,4 +22,13 @@ func createSymlink(target string, symlink string) int {
 	}
 
 	return 0
+}
+
+func CreateProjectContextSymlink(projectName string) int {
+	if !existingPath(projectDir(projectName)) {
+		fmt.Printf("project config directory '%s' is not existing\n", projectDir(projectName))
+		return 1
+	}
+
+	return createSymlink(unselectedContextFile(projectName), projectSymlink(projectName))
 }

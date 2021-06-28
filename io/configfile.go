@@ -8,17 +8,6 @@ import (
 	"os"
 )
 
-func SetupConfigDir() int {
-	if existingDir(configDir()) {
-		fmt.Println("config directory '~/.kubecfg' is existing and will be used")
-		return 1
-	}
-	if _, err := os.Stat(configDir()); os.IsNotExist(err) {
-		os.Mkdir(configDir(), 0755)
-	}
-	return 0
-}
-
 func WriteInitialConfigToFileSystem(config *config.Config) int {
 	configFile, err := os.Create(configFile())
 	if err != nil {
@@ -42,4 +31,26 @@ func writeToDisk(file *os.File, config *config.Config) int {
 	}
 
 	return 0
+}
+
+func LoadConfigFromFileSystem() (config.Config, error) {
+	var config config.Config
+	configFile, err := os.Open(configFile())
+	defer configFile.Close()
+	jsonParser := json.NewDecoder(configFile)
+	if err = jsonParser.Decode(&config); err != nil {
+		return config, err
+	}
+	return config, err
+}
+
+func WriteConfigToFileSystem(config *config.Config) int {
+	configFile, err := os.OpenFile(configFile(), os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0755)
+	if err != nil {
+		fmt.Println("cannot open 'config.json'")
+		return 1
+	}
+	defer configFile.Close()
+
+	return writeToDisk(configFile, config)
 }

@@ -21,6 +21,9 @@ func main() {
 		"project": func() (cli.Command, error) {
 			return &command.ProjectCommand{}, nil
 		},
+		"project add": func() (cli.Command, error) {
+			return &command.ProjectAddCommand{}, nil
+		},
 		"version": func() (cli.Command, error) {
 			return &command.VersionCommand{
 				Version: version,
