@@ -15,6 +15,9 @@ func main() {
 	c.Args = os.Args[1:]
 
 	c.Commands = map[string]cli.CommandFactory{
+		"context": func() (cli.Command, error) {
+			return &command.ContextCommand{}, nil
+		},
 		"init": func() (cli.Command, error) {
 			return &command.InitCommand{}, nil
 		},
