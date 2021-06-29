@@ -19,6 +19,9 @@ func main() {
 		"context": func() (cli.Command, error) {
 			return &command.ContextCommand{}, nil
 		},
+		"dump": func() (cli.Command, error) {
+			return &command.DumpCommand{}, nil
+		},
 		"info": func() (cli.Command, error) {
 			return &command.InfoCommand{}, nil
 		},
