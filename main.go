@@ -10,6 +10,7 @@ import (
 
 const version = "1.0.0"
 
+//TODO flo: think about dump config as zip file command
 func main() {
 	c := cli.NewCLI("kubecfg", version)
 	c.Args = os.Args[1:]
@@ -32,6 +33,9 @@ func main() {
 		},
 		"project list": func() (cli.Command, error) {
 			return &command.ProjectListCommand{}, nil
+		},
+		"project remove": func() (cli.Command, error) {
+			return &command.ProjectRemoveCommand{}, nil
 		},
 		"project select": func() (cli.Command, error) {
 			return &command.ProjectSelectCommand{}, nil

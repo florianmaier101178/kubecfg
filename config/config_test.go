@@ -189,7 +189,7 @@ func TestIsProjectSelected(t *testing.T) {
 	t.Run("project is selected", func(t *testing.T) {
 		expected := "business"
 
-		if !businessSelected.isProjectSelected(expected) {
+		if !businessSelected.IsProjectSelected(expected) {
 			t.Errorf("project '%v' is not the selected project", expected)
 		}
 	})
@@ -197,7 +197,7 @@ func TestIsProjectSelected(t *testing.T) {
 	t.Run("project is not selected", func(t *testing.T) {
 		expected := "components"
 
-		if businessSelected.isProjectSelected(expected) {
+		if businessSelected.IsProjectSelected(expected) {
 			t.Errorf("project '%v' is the selected project", expected)
 		}
 	})

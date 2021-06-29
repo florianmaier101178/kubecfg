@@ -11,7 +11,7 @@ func CreateUnselectedProjectMarkerFile() int {
 		return 1
 	}
 
-	return createMarkerFile(fmt.Sprintf("%s/unselected", configDir()))
+	return createMarkerFile(unselectedProjectFile())
 }
 
 func createMarkerFile(name string) int {

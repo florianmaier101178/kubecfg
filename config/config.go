@@ -36,6 +36,7 @@ func (c *Config) RemoveProject(projectName string) (*Config, error) {
 		if c.SelectedProject == projectName {
 			c.UnselectProject()
 		}
+		return c, nil
 	}
 	return c, errors.New(
 		fmt.Sprintf("given project: '%s' not existing in config", projectName))
@@ -52,7 +53,7 @@ func (c *Config) ExistingProject(projectName string) (bool, int) {
 	return false, -1
 }
 
-func (c *Config) isProjectSelected(projectName string) bool {
+func (c *Config) IsProjectSelected(projectName string) bool {
 	if c.SelectedProject == projectName {
 		return true
 	}
