@@ -53,6 +53,13 @@ func (c *Config) ExistingProject(projectName string) (bool, int) {
 	return false, -1
 }
 
+func (c *Config) HasSelectedProject() bool {
+	if c.SelectedProject != unselected {
+		return true
+	}
+	return false
+}
+
 func (c *Config) IsProjectSelected(projectName string) bool {
 	if c.SelectedProject == projectName {
 		return true
@@ -75,6 +82,32 @@ func (c *Config) UnselectProject() *Config {
 		c.SelectedProject = unselected
 	}
 	return c
+}
+
+func (c *Config) GetProject(projectName string) (*Project, error) {
+	existingProject, _ := c.ExistingProject(projectName)
+	if existingProject {
+		for _, project := range c.Projects {
+			if project.Name == projectName {
+				return &project, nil
+			}
+		}
+	}
+	return &Project{}, errors.New(fmt.Sprintf("No project found for projectName: '%s'\n", projectName))
+}
+
+func (c *Config) UpdateProject(updatedProject Project) (*Config, error) {
+	existingProject, _ := c.ExistingProject(updatedProject.Name)
+	if existingProject {
+		for i, project := range c.Projects {
+			if project.Name == updatedProject.Name {
+				c.Projects[i] = updatedProject
+				return c, nil
+			}
+		}
+	}
+	return c, errors.New(
+		fmt.Sprintf("given project: '%s' not existing in config", updatedProject.Name))
 }
 
 func (c *Config) GetProjectNames() []string {

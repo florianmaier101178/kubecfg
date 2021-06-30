@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"encoding/json"
 	"fmt"
+	"kubecfg/arguments"
 	"kubecfg/config"
 	"os"
 )
@@ -53,4 +54,23 @@ func WriteUpdatedConfigToFileSystem(config *config.Config) int {
 	defer configFile.Close()
 
 	return writeToDisk(configFile, config)
+}
+
+func BackupKubeConfigFile() {
+	if existingPath(kubectlConfigFile()) {
+		if existingPath(kubectlConfigBackupFile()) {
+			os.Remove(kubectlConfigBackupFile())
+		}
+		os.Rename(kubectlConfigFile(), kubectlConfigBackupFile())
+	}
+}
+
+func RestoreBackedUpKubeConfigFile() {
+	if existingPath(kubectlConfigBackupFile()) {
+		os.Rename(kubectlConfigBackupFile(), kubectlConfigFile())
+	}
+}
+
+func SaveCreatedContextFile(args *arguments.ContextAddArguments) {
+	os.Rename(kubectlConfigFile(), projectContextFile(args.ProjectName, string(args.ContextName)))
 }

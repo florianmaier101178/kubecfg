@@ -241,6 +241,28 @@ func TestSelectedProjectNotPossibleIfProjectNotExisting(t *testing.T) {
 	_, err := config.SelectProject("example")
 
 	if err.Error() != expected {
-		t.Errorf("got \"%s\", but expected: \"%s\" ", expected, err.Error())
+		t.Errorf("got \"%s\", but expected: \"%s\" ", err.Error(), expected)
+	}
+}
+
+func TestHasSelectedProject(t *testing.T) {
+	hasSelectedProject := configWithSelectedProject("business").HasSelectedProject()
+	if !hasSelectedProject {
+		t.Errorf("project has no selected project")
+	}
+
+	hasSelectedProject = configWithMultipleProjects().HasSelectedProject()
+	if hasSelectedProject {
+		t.Errorf("project has selected project")
+	}
+}
+
+func TestGetProject(t *testing.T) {
+	config := configWithMultipleProjects()
+	project, _ := config.GetProject("business")
+	expected := "business"
+
+	if project.Name != expected {
+		t.Errorf("got \"%s\", but expected: \"%s\" ", project.Name, expected)
 	}
 }

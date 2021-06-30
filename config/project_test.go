@@ -255,3 +255,33 @@ func TestSelectedContextNotPossibleIfContextNotExisting(t *testing.T) {
 		t.Errorf("got \"%s\", but expected: \"%s\" ", expected, err.Error())
 	}
 }
+
+func TestGetContextNames(t *testing.T) {
+	contextNames := projectWithMultipleContexts().GetContextNames()
+
+	t.Run("number of contexts", func(t *testing.T) {
+		expected := 3
+
+		if len(contextNames) != expected {
+			t.Errorf("got %d, but expected %d", len(contextNames), expected)
+		}
+	})
+
+	t.Run("existence of contexts", func(t *testing.T) {
+		firstContext := Context("dev")
+		secondContext := Context("int")
+		thirdContext := Context("stable")
+
+		if contextNames[0] != firstContext {
+			t.Errorf("got %v, but expected %v", contextNames[0], firstContext)
+		}
+
+		if contextNames[1] != secondContext {
+			t.Errorf("got %v, but expected %v", contextNames[0], secondContext)
+		}
+
+		if contextNames[2] != thirdContext {
+			t.Errorf("got %v, but expected %v", contextNames[0], thirdContext)
+		}
+	})
+}

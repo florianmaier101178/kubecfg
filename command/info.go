@@ -23,7 +23,7 @@ func (i *InfoCommand) Run(args []string) int {
 		return 1
 	}
 	//TODO write info about az login, az account set, ...
-	//TODO write installation info's where binary is located, about .kubecfg, maybe autocompletion
+	//write installation info's where binary is located, about .kubecfg, maybe autocompletion
 	return 0
 }
 

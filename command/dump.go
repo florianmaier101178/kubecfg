@@ -17,7 +17,7 @@ Usage: kubecfg dump
 	return strings.TrimSpace(helpText)
 }
 
-//TODO implement
+//TODO implement, maybe links are kind of problematic, think about export and import functionality instead
 func (d *DumpCommand) Run(args []string) int {
 	if len(args) > 0 {
 		fmt.Println(d.Help())

@@ -10,6 +10,22 @@ func IllegalConfigurationSetup() bool {
 	return !existingPath(configDir()) || !existingPath(configFile())
 }
 
+func kubectlConfigDir() string {
+	home, err := os.UserHomeDir()
+	if err != nil {
+		log.Fatal(err)
+	}
+	return fmt.Sprintf("%s/.kube", home)
+}
+
+func kubectlConfigFile() string {
+	return fmt.Sprintf("%s/config", kubectlConfigDir())
+}
+
+func kubectlConfigBackupFile() string {
+	return fmt.Sprintf("%s_backup", kubectlConfigFile())
+}
+
 func configDir() string {
 	home, err := os.UserHomeDir()
 	if err != nil {
@@ -43,6 +59,10 @@ func existingPath(name string) bool {
 
 func unselectedContextFile(projectName string) string {
 	return fmt.Sprintf("%s/%s/unselected", configDir(), projectName)
+}
+
+func projectContextFile(projectName string, contextName string) string {
+	return fmt.Sprintf("%s/%s/%s", configDir(), projectName, contextName)
 }
 
 func projectSymlink(projectName string) string {

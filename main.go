@@ -10,7 +10,6 @@ import (
 
 const version = "1.0.0"
 
-//TODO flo: think about dump config as zip file command
 func main() {
 	c := cli.NewCLI("kubecfg", version)
 	c.Args = os.Args[1:]
@@ -18,6 +17,12 @@ func main() {
 	c.Commands = map[string]cli.CommandFactory{
 		"context": func() (cli.Command, error) {
 			return &command.ContextCommand{}, nil
+		},
+		"context add": func() (cli.Command, error) {
+			return &command.ContextAddCommand{}, nil
+		},
+		"context list": func() (cli.Command, error) {
+			return &command.ContextListCommand{}, nil
 		},
 		"dump": func() (cli.Command, error) {
 			return &command.DumpCommand{}, nil

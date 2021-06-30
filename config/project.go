@@ -78,3 +78,7 @@ func (p *Project) unselectContext() *Project {
 	}
 	return p
 }
+
+func (p *Project) GetContextNames() []Context {
+	return p.Contexts
+}

@@ -17,7 +17,6 @@ Usage: kubecfg project
 	return strings.TrimSpace(helpText)
 }
 
-//TODO check handling for higher arg count -> message
 func (p *ProjectCommand) Run(args []string) int {
 	if len(args) == 0 {
 		fmt.Println(p.Help())
