@@ -24,6 +24,9 @@ func main() {
 		"context list": func() (cli.Command, error) {
 			return &command.ContextListCommand{}, nil
 		},
+		"context remove": func() (cli.Command, error) {
+			return &command.ContextRemoveCommand{}, nil
+		},
 		"dump": func() (cli.Command, error) {
 			return &command.DumpCommand{}, nil
 		},

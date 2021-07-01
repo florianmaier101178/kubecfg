@@ -1,9 +1,8 @@
 package command
 
 import (
-	"errors"
 	"fmt"
-	"kubecfg/config"
+	"kubecfg/arguments"
 	"kubecfg/io"
 	"strings"
 )
@@ -27,6 +26,13 @@ NAME	projectName
 }
 
 func (c *ContextListCommand) Run(args []string) int {
+	contextListArgs, err := arguments.ParseContextListArguments(args)
+	if err != nil {
+		fmt.Println(err)
+		fmt.Println()
+		fmt.Println(c.Help())
+		return 1
+	}
 	if len(args) > 1 {
 		fmt.Println(c.Help())
 		return 1
@@ -43,7 +49,7 @@ func (c *ContextListCommand) Run(args []string) int {
 		return 1
 	}
 
-	projectName, err := determineProjectName(args, config)
+	projectName, err := determineProjectName(contextListArgs, config)
 	if err != nil {
 		fmt.Println(err)
 		return 1
@@ -67,17 +73,6 @@ func (c *ContextListCommand) Run(args []string) int {
 	fmt.Println()
 
 	return 0
-}
-
-func determineProjectName(args []string, config config.Config) (string, error) {
-	if len(args) == 1 {
-		return args[0], nil
-	}
-	if config.HasSelectedProject() {
-		return config.SelectedProject, nil
-	}
-	return "", errors.New(
-		fmt.Sprintf("neither projectName was passed in, nor config contains a selected project"))
 }
 
 func (c *ContextListCommand) Synopsis() string {

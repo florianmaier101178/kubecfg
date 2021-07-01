@@ -9,7 +9,7 @@ type ContextAddArguments struct {
 	ContextName   config.Context
 	ResourceGroup string
 	ClusterName   string
-	ProjectName	  string
+	ProjectName   string
 }
 
 func ParseContextAddArguments(args []string) (*ContextAddArguments, error) {
@@ -40,15 +40,6 @@ func ParseContextAddArguments(args []string) (*ContextAddArguments, error) {
 	contextAddArgs.ClusterName = clusterName
 
 	return contextAddArgs, nil
-}
-
-func extractProjectName(args []string) (string, error) {
-	for i, value := range args {
-		if value == "-project" {
-			return args[i+1], nil
-		}
-	}
-	return "", errors.New("cannot parse -project argument")
 }
 
 func extractResourceGroup(args []string) (string, error) {
