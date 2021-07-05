@@ -216,7 +216,7 @@ func TestIsContextSelected(t *testing.T) {
 
 func TestUnselectContext(t *testing.T) {
 	project := projectWithSelectedContext("dev")
-	project.unselectContext()
+	project.UnselectContext()
 	var expected Context = "unselected"
 
 	if project.SelectedContext != expected {
@@ -226,7 +226,7 @@ func TestUnselectContext(t *testing.T) {
 
 func TestUnselectContextForAlreadyUnselectedContext(t *testing.T) {
 	project := projectWithAddedContext("dev")
-	project.unselectContext()
+	project.UnselectContext()
 	var expected Context = "unselected"
 
 	if project.SelectedContext != expected {
