@@ -2,7 +2,6 @@ package command
 
 import (
 	"fmt"
-	"kubecfg/arguments"
 	"kubecfg/io"
 	"strings"
 )
@@ -26,7 +25,7 @@ Options:
 }
 
 func (c *ContextRemoveCommand) Run(args []string) int {
-	projectNameAndContextArgs, err := arguments.ParseProjectNameAndContextArguments(args)
+	projectNameAndContextArgs, err := ParseProjectNameAndContextArguments(args)
 	if err != nil {
 		fmt.Println(err)
 		fmt.Println()

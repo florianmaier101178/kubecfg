@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"encoding/json"
 	"fmt"
-	"kubecfg/arguments"
 	"kubecfg/config"
 	"os"
 )
@@ -71,6 +70,6 @@ func RestoreBackedUpKubeConfigFile() {
 	}
 }
 
-func SaveCreatedContextFile(args *arguments.ContextAddArguments) {
-	os.Rename(kubectlConfigFile(), projectContextFile(args.ProjectName, string(args.ContextName)))
+func SaveCreatedContextFile(projectName string, contextName string) {
+	os.Rename(kubectlConfigFile(), projectContextFile(projectName, contextName))
 }

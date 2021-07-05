@@ -2,7 +2,6 @@ package command
 
 import (
 	"fmt"
-	"kubecfg/arguments"
 	"kubecfg/io"
 	"strings"
 )
@@ -22,7 +21,7 @@ Usage: kubecfg context unselect NAME
 }
 
 func (c *ContextUnselectCommand) Run(args []string) int {
-	optionalProjectNameArg, err := arguments.ParseOptionalProjectNameArgument(args)
+	optionalProjectNameArg, err := ParseOptionalProjectNameArgument(args)
 	if err != nil {
 		fmt.Println(err)
 		fmt.Println()

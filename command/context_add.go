@@ -2,7 +2,6 @@ package command
 
 import (
 	"fmt"
-	"kubecfg/arguments"
 	"kubecfg/azure"
 	"kubecfg/io"
 	"strings"
@@ -35,7 +34,7 @@ Options:
 	az account set command.
 */
 func (c *ContextAddCommand) Run(args []string) int {
-	contextAddArgs, err := arguments.ParseContextAddArguments(args)
+	contextAddArgs, err := ParseContextAddArguments(args)
 	if err != nil {
 		fmt.Println(err)
 		fmt.Println()
@@ -55,8 +54,8 @@ func (c *ContextAddCommand) Run(args []string) int {
 	}
 
 	io.BackupKubeConfigFile()
-	azure.CreateCredentialsForContext(contextAddArgs)
-	io.SaveCreatedContextFile(contextAddArgs)
+	azure.CreateCredentialsForContext(contextAddArgs.ResourceGroup, contextAddArgs.ClusterName)
+	io.SaveCreatedContextFile(contextAddArgs.ProjectName, string(contextAddArgs.ContextName))
 	io.RestoreBackedUpKubeConfigFile()
 
 	project, err := config.GetProject(contextAddArgs.ProjectName)

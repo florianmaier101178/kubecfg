@@ -2,7 +2,6 @@ package command
 
 import (
 	"fmt"
-	"kubecfg/arguments"
 	"strings"
 )
 
@@ -21,7 +20,7 @@ Usage: kubecfg context show NAME
 }
 
 func (c *ContextShowCommand) Run(args []string) int {
-	optionalProjectNameArg, err := arguments.ParseOptionalProjectNameArgument(args)
+	optionalProjectNameArg, err := ParseOptionalProjectNameArgument(args)
 	if err != nil {
 		fmt.Println(err)
 		fmt.Println()
