@@ -5,8 +5,7 @@ import (
 	"kubecfg/config"
 )
 
-//TODO think about interface
-type OptionalProjectName interface {
+type ArgumentWithOptionalProjectName interface {
 	Name() string
 	Available() bool
 }
@@ -43,17 +42,20 @@ func ParseOptionalProjectNameArgument(args []string) (*OptionalProjectNameArgume
 }
 
 type ProjectNameAndContextArguments struct {
-	ProjectName          string
-	ProjectNameAvailable bool
+	OptionalProjectNameArgument
 	ContextName          config.Context
 }
 
 func (p ProjectNameAndContextArguments) Name() string {
-	return p.ProjectName
+	return p.name
+}
+
+func (p ProjectNameAndContextArguments) ProjectName() string {
+	return p.Name()
 }
 
 func (p ProjectNameAndContextArguments) Available() bool {
-	return p.ProjectNameAvailable
+	return p.available
 }
 
 func ParseProjectNameAndContextArguments(args []string) (*ProjectNameAndContextArguments, error) {
@@ -67,11 +69,11 @@ func ParseProjectNameAndContextArguments(args []string) (*ProjectNameAndContextA
 
 	projectName, err := extractProjectName(args)
 	if err != nil {
-		projectNameAndContextArgs.ProjectNameAvailable = false
+		projectNameAndContextArgs.available = false
 		return projectNameAndContextArgs, nil
 	}
-	projectNameAndContextArgs.ProjectName = projectName
-	projectNameAndContextArgs.ProjectNameAvailable = true
+	projectNameAndContextArgs.name = projectName
+	projectNameAndContextArgs.available = true
 
 	return projectNameAndContextArgs, nil
 }

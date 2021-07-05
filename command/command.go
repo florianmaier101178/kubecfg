@@ -2,6 +2,7 @@ package command
 
 import (
 	"fmt"
+	"kubecfg/arguments"
 	cfg "kubecfg/config"
 	"kubecfg/io"
 )
@@ -19,4 +20,14 @@ func loadConfig() (*cfg.Config, int) {
 	}
 
 	return &config, 0
+}
+
+func provideProjectName(arg arguments.ArgumentWithOptionalProjectName, config *cfg.Config) (string, int) {
+	if arg.Available() {
+		return arg.Name(), 0
+	}
+	if config.HasSelectedProject() {
+		return config.SelectedProject, 0
+	}
+	return "", 1
 }

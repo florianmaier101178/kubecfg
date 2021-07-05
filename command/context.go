@@ -1,10 +1,7 @@
 package command
 
 import (
-	"errors"
 	"fmt"
-	"kubecfg/arguments"
-	"kubecfg/config"
 	"strings"
 )
 
@@ -29,15 +26,4 @@ func (c *ContextCommand) Run(args []string) int {
 
 func (c *ContextCommand) Synopsis() string {
 	return "Context management"
-}
-
-func determineProjectName(projectName arguments.OptionalProjectName, config config.Config) (string, error) {
-	if projectName.Available() {
-		return projectName.Name(), nil
-	}
-	if config.HasSelectedProject() {
-		return config.SelectedProject, nil
-	}
-	return "", errors.New(
-		fmt.Sprintf("neither projectName was passed in, nor config contains a selected project"))
 }

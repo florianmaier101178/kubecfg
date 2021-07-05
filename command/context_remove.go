@@ -39,15 +39,9 @@ func (c *ContextRemoveCommand) Run(args []string) int {
 		return exitStatus
 	}
 
-	var projectName string //from here on use projectName instead of contextRemoveArgs.ProjectName
-	if projectNameAndContextArgs.ProjectNameAvailable {
-		projectName = projectNameAndContextArgs.ProjectName
-	} else {
-		projectName, err = determineProjectName(projectNameAndContextArgs, *config)
-		if err != nil {
-			fmt.Println(err)
-			return 1
-		}
+	projectName, exitStatus := provideProjectName(*projectNameAndContextArgs, config)
+	if exitStatus != 0 {
+		return exitStatus
 	}
 
 	project, err := config.GetProject(projectName)
@@ -78,7 +72,7 @@ func (c *ContextRemoveCommand) Run(args []string) int {
 		return exitStatus
 	}
 
-	fmt.Printf("removed context '%s' from project '%s'\n", projectNameAndContextArgs.ContextName, projectNameAndContextArgs.ProjectName)
+	fmt.Printf("removed context '%s' from project '%s'\n", projectNameAndContextArgs.ContextName, projectNameAndContextArgs.ProjectName())
 
 	return 0
 }

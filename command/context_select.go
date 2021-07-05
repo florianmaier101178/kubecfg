@@ -39,15 +39,9 @@ func (c *ContextSelectCommand) Run(args []string) int {
 		return exitStatus
 	}
 
-	var projectName string //from here on use projectName instead of contextRemoveArgs.ProjectName
-	if projectNameAndContextArgs.ProjectNameAvailable {
-		projectName = projectNameAndContextArgs.ProjectName
-	} else {
-		projectName, err = determineProjectName(projectNameAndContextArgs, *config)
-		if err != nil {
-			fmt.Println(err)
-			return 1
-		}
+	projectName, exitStatus := provideProjectName(*projectNameAndContextArgs, config)
+	if exitStatus != 0 {
+		return exitStatus
 	}
 
 	existingProject, _ := config.ExistingProject(projectName)
