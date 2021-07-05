@@ -27,18 +27,12 @@ func (p *ProjectAddCommand) Run(args []string) int {
 	projectName := args[0]
 	fmt.Printf("add project '%s' to kubecfg configuration\n", projectName)
 
-	if io.IllegalConfigurationSetup() {
-		fmt.Println("kubecfg is not properly configured")
-		return 1
+	config, exitStatus := loadConfig()
+	if exitStatus != 0 {
+		return exitStatus
 	}
 
-	config, err := io.LoadConfigFromFileSystem()
-	if err != nil {
-		fmt.Println("could not load 'config.json'")
-		return 1
-	}
-
-	exitStatus := io.CreateProjectDir(projectName)
+	exitStatus = io.CreateProjectDir(projectName)
 	if exitStatus > 0 {
 		return exitStatus
 	}

@@ -2,7 +2,6 @@ package command
 
 import (
 	"fmt"
-	"kubecfg/io"
 	"strings"
 )
 
@@ -24,15 +23,9 @@ func (p *ProjectShowCommand) Run(args []string) int {
 		return 1
 	}
 
-	if io.IllegalConfigurationSetup() {
-		fmt.Println("kubecfg is not properly configured")
-		return 1
-	}
-
-	config, err := io.LoadConfigFromFileSystem()
-	if err != nil {
-		fmt.Println("could not load 'config.json'")
-		return 1
+	config, exitStatus := loadConfig()
+	if exitStatus != 0 {
+		return exitStatus
 	}
 
 	fmt.Println("selected project:")

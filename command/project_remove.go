@@ -30,15 +30,9 @@ func (p *ProjectRemoveCommand) Run(args []string) int {
 	projectName := args[0]
 	fmt.Printf("remove project '%s' from kubecfg configuration\n", projectName)
 
-	if io.IllegalConfigurationSetup() {
-		fmt.Println("kubecfg is not properly configured")
-		return 1
-	}
-
-	config, err := io.LoadConfigFromFileSystem()
-	if err != nil {
-		fmt.Println("could not load 'config.json'")
-		return 1
+	config, exitStatus := loadConfig()
+	if exitStatus != 0 {
+		return exitStatus
 	}
 
 	existingProject, _ := config.ExistingProject(projectName)
@@ -61,7 +55,7 @@ func (p *ProjectRemoveCommand) Run(args []string) int {
 		return 1
 	}
 
-	exitStatus := io.WriteUpdatedConfigToFileSystem(updatedConfig)
+	exitStatus = io.WriteUpdatedConfigToFileSystem(updatedConfig)
 	if exitStatus > 0 {
 		return exitStatus
 	}

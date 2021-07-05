@@ -25,18 +25,12 @@ func (p *ProjectUnselectCommand) Run(args []string) int {
 	}
 	fmt.Println("project selection unset")
 
-	if io.IllegalConfigurationSetup() {
-		fmt.Println("kubecfg is not properly configured")
-		return 1
+	config, exitStatus := loadConfig()
+	if exitStatus != 0 {
+		return exitStatus
 	}
 
-	config, err := io.LoadConfigFromFileSystem()
-	if err != nil {
-		fmt.Println("could not load 'config.json'")
-		return 1
-	}
-
-	exitStatus := io.WriteUpdatedConfigToFileSystem(config.UnselectProject())
+	exitStatus = io.WriteUpdatedConfigToFileSystem(config.UnselectProject())
 	if exitStatus > 0 {
 		return exitStatus
 	}

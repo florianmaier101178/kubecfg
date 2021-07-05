@@ -30,22 +30,16 @@ func (c *ContextUnselectCommand) Run(args []string) int {
 		return 1
 	}
 
-	if io.IllegalConfigurationSetup() {
-		fmt.Println("kubecfg is not properly configured")
-		return 1
-	}
-
-	config, err := io.LoadConfigFromFileSystem()
-	if err != nil {
-		fmt.Println("could not load 'config.json'")
-		return 1
+	config, exitStatus := loadConfig()
+	if exitStatus != 0 {
+		return exitStatus
 	}
 
 	var projectName string //from here on use projectName instead of contextRemoveArgs.ProjectName
 	if optionalProjectNameArg.Available() {
 		projectName = optionalProjectNameArg.Name()
 	} else {
-		projectName, err = determineProjectName(optionalProjectNameArg, config)
+		projectName, err = determineProjectName(optionalProjectNameArg, *config)
 		if err != nil {
 			fmt.Println(err)
 			return 1
@@ -70,7 +64,7 @@ func (c *ContextUnselectCommand) Run(args []string) int {
 		return 1
 	}
 
-	exitStatus := io.WriteUpdatedConfigToFileSystem(updatedConfig)
+	exitStatus = io.WriteUpdatedConfigToFileSystem(updatedConfig)
 	if exitStatus > 0 {
 		return exitStatus
 	}
