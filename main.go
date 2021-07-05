@@ -36,9 +36,6 @@ func main() {
 		"context unselect": func() (cli.Command, error) {
 			return &command.ContextUnselectCommand{}, nil
 		},
-		"dump": func() (cli.Command, error) {
-			return &command.DumpCommand{}, nil
-		},
 		"info": func() (cli.Command, error) {
 			return &command.InfoCommand{}, nil
 		},
