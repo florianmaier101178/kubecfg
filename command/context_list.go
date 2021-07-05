@@ -26,7 +26,7 @@ NAME	projectName
 }
 
 func (c *ContextListCommand) Run(args []string) int {
-	contextListArgs, err := arguments.ParseContextListArguments(args)
+	optionalProjectNameArg, err := arguments.ParseOptionalProjectNameArgument(args)
 	if err != nil {
 		fmt.Println(err)
 		fmt.Println()
@@ -49,10 +49,15 @@ func (c *ContextListCommand) Run(args []string) int {
 		return 1
 	}
 
-	projectName, err := determineProjectName(contextListArgs, config)
-	if err != nil {
-		fmt.Println(err)
-		return 1
+	var projectName string //from here on use projectName instead of contextRemoveArgs.ProjectName
+	if optionalProjectNameArg.Available() {
+		projectName = optionalProjectNameArg.Name()
+	} else {
+		projectName, err = determineProjectName(optionalProjectNameArg, config)
+		if err != nil {
+			fmt.Println(err)
+			return 1
+		}
 	}
 
 	existingProject, _ := config.ExistingProject(projectName)

@@ -3,6 +3,7 @@ package command
 import (
 	"errors"
 	"fmt"
+	"kubecfg/arguments"
 	"kubecfg/config"
 	"strings"
 )
@@ -30,12 +31,7 @@ func (c *ContextCommand) Synopsis() string {
 	return "Context management"
 }
 
-type OptionalProjectName interface {
-	Name() string
-	Available() bool
-}
-
-func determineProjectName(projectName OptionalProjectName, config config.Config) (string, error) {
+func determineProjectName(projectName arguments.OptionalProjectName, config config.Config) (string, error) {
 	if projectName.Available() {
 		return projectName.Name(), nil
 	}

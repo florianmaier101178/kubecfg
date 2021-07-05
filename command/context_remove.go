@@ -26,15 +26,13 @@ Options:
 }
 
 func (c *ContextRemoveCommand) Run(args []string) int {
-	contextRemoveArgs, err := arguments.ParseContextRemoveArguments(args)
+	projectNameAndContextArgs, err := arguments.ParseProjectNameAndContextArguments(args)
 	if err != nil {
 		fmt.Println(err)
 		fmt.Println()
 		fmt.Println(c.Help())
 		return 1
 	}
-
-	fmt.Printf("remove context '%s' from project '%s'\n", contextRemoveArgs.ContextName, contextRemoveArgs.ProjectName)
 
 	if io.IllegalConfigurationSetup() {
 		fmt.Println("kubecfg is not properly configured")
@@ -48,10 +46,10 @@ func (c *ContextRemoveCommand) Run(args []string) int {
 	}
 
 	var projectName string //from here on use projectName instead of contextRemoveArgs.ProjectName
-	if contextRemoveArgs.ProjectNameAvailable{
-		projectName = contextRemoveArgs.ProjectName
+	if projectNameAndContextArgs.ProjectNameAvailable {
+		projectName = projectNameAndContextArgs.ProjectName
 	} else {
-		projectName, err = determineProjectName(contextRemoveArgs, config)
+		projectName, err = determineProjectName(projectNameAndContextArgs, config)
 		if err != nil {
 			fmt.Println(err)
 			return 1
@@ -64,7 +62,7 @@ func (c *ContextRemoveCommand) Run(args []string) int {
 		return 1
 	}
 
-	updatedProject, err := project.RemoveContext(contextRemoveArgs.ContextName)
+	updatedProject, err := project.RemoveContext(projectNameAndContextArgs.ContextName)
 	if err != nil {
 		fmt.Println(err)
 		return 1
@@ -85,6 +83,8 @@ func (c *ContextRemoveCommand) Run(args []string) int {
 	if exitStatus > 0 {
 		return exitStatus
 	}
+
+	fmt.Printf("removed context '%s' from project '%s'\n", projectNameAndContextArgs.ContextName, projectNameAndContextArgs.ProjectName)
 
 	return 0
 }

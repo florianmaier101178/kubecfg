@@ -26,7 +26,7 @@ Options:
 }
 
 func (c *ContextSelectCommand) Run(args []string) int {
-	contextSelectArgs, err := arguments.ParseContextSelectArguments(args)
+	projectNameAndContextArgs, err := arguments.ParseProjectNameAndContextArguments(args)
 	if err != nil {
 		fmt.Println(err)
 		fmt.Println()
@@ -46,10 +46,10 @@ func (c *ContextSelectCommand) Run(args []string) int {
 	}
 
 	var projectName string //from here on use projectName instead of contextRemoveArgs.ProjectName
-	if contextSelectArgs.ProjectNameAvailable{
-		projectName = contextSelectArgs.ProjectName
+	if projectNameAndContextArgs.ProjectNameAvailable {
+		projectName = projectNameAndContextArgs.ProjectName
 	} else {
-		projectName, err = determineProjectName(contextSelectArgs, config)
+		projectName, err = determineProjectName(projectNameAndContextArgs, config)
 		if err != nil {
 			fmt.Println(err)
 			return 1
@@ -68,7 +68,7 @@ func (c *ContextSelectCommand) Run(args []string) int {
 		return 1
 	}
 
-	updatedProject, err := project.SelectContext(contextSelectArgs.ContextName)
+	updatedProject, err := project.SelectContext(projectNameAndContextArgs.ContextName)
 	if err != nil {
 		fmt.Println(err)
 		return 1
@@ -85,12 +85,12 @@ func (c *ContextSelectCommand) Run(args []string) int {
 		return exitStatus
 	}
 
-	exitStatus = io.UpdateProjectContextSymlink(projectName, contextSelectArgs.ContextName)
+	exitStatus = io.UpdateProjectContextSymlink(projectName, projectNameAndContextArgs.ContextName)
 	if exitStatus > 0 {
 		return exitStatus
 	}
 
-	fmt.Printf("selected context '%s' for project '%s'\n", contextSelectArgs.ContextName, projectName)
+	fmt.Printf("selected context '%s' for project '%s'\n", projectNameAndContextArgs.ContextName, projectName)
 
 	return 0
 }

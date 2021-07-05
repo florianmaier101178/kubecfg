@@ -22,7 +22,7 @@ Usage: kubecfg context unselect NAME
 }
 
 func (c *ContextUnselectCommand) Run(args []string) int {
-	contextUnselectArgs, err := arguments.ParseContextUnselectArguments(args)
+	optionalProjectNameArg, err := arguments.ParseOptionalProjectNameArgument(args)
 	if err != nil {
 		fmt.Println(err)
 		fmt.Println()
@@ -42,10 +42,10 @@ func (c *ContextUnselectCommand) Run(args []string) int {
 	}
 
 	var projectName string //from here on use projectName instead of contextRemoveArgs.ProjectName
-	if contextUnselectArgs.ProjectNameAvailable{
-		projectName = contextUnselectArgs.ProjectName
+	if optionalProjectNameArg.Available() {
+		projectName = optionalProjectNameArg.Name()
 	} else {
-		projectName, err = determineProjectName(contextUnselectArgs, config)
+		projectName, err = determineProjectName(optionalProjectNameArg, config)
 		if err != nil {
 			fmt.Println(err)
 			return 1
