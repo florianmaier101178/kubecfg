@@ -7,16 +7,16 @@ import (
 	"strings"
 )
 
-type ContextRemoveCommand struct {
+type ContextSelectCommand struct {
 }
 
-func (c *ContextRemoveCommand) Help() string {
+func (c *ContextSelectCommand) Help() string {
 	helpText := `
-Usage: kubecfg context remove NAME [options]
+Usage: kubecfg context select NAME [options]
 
-  Remove a context from a project.
+  Select a context for a project.
   If this command is called parameterless, than the selected project (if a project is selected) is used.
-  If an optional parameter with an project name is passed in, than for this project the context will be removed.
+  If an optional parameter with an project name is passed in, than for this project the context will be selected.
 
 Options:
 
@@ -25,16 +25,14 @@ Options:
 	return strings.TrimSpace(helpText)
 }
 
-func (c *ContextRemoveCommand) Run(args []string) int {
-	contextRemoveArgs, err := arguments.ParseContextRemoveArguments(args)
+func (c *ContextSelectCommand) Run(args []string) int {
+	contextSelectArgs, err := arguments.ParseContextSelectArguments(args)
 	if err != nil {
 		fmt.Println(err)
 		fmt.Println()
 		fmt.Println(c.Help())
 		return 1
 	}
-
-	fmt.Printf("remove context '%s' from project '%s'\n", contextRemoveArgs.ContextName, contextRemoveArgs.ProjectName)
 
 	if io.IllegalConfigurationSetup() {
 		fmt.Println("kubecfg is not properly configured")
@@ -48,14 +46,20 @@ func (c *ContextRemoveCommand) Run(args []string) int {
 	}
 
 	var projectName string //from here on use projectName instead of contextRemoveArgs.ProjectName
-	if contextRemoveArgs.ProjectNameAvailable{
-		projectName = contextRemoveArgs.ProjectName
+	if contextSelectArgs.ProjectNameAvailable{
+		projectName = contextSelectArgs.ProjectName
 	} else {
-		projectName, err = determineProjectName(contextRemoveArgs, config)
+		projectName, err = determineProjectName(contextSelectArgs, config)
 		if err != nil {
 			fmt.Println(err)
 			return 1
 		}
+	}
+
+	existingProject, _ := config.ExistingProject(projectName)
+	if !existingProject {
+		fmt.Printf("No project with name: '%s' available for usage\n", projectName)
+		return 1
 	}
 
 	project, err := config.GetProject(projectName)
@@ -64,7 +68,7 @@ func (c *ContextRemoveCommand) Run(args []string) int {
 		return 1
 	}
 
-	updatedProject, err := project.RemoveContext(contextRemoveArgs.ContextName)
+	updatedProject, err := project.SelectContext(contextSelectArgs.ContextName)
 	if err != nil {
 		fmt.Println(err)
 		return 1
@@ -81,14 +85,16 @@ func (c *ContextRemoveCommand) Run(args []string) int {
 		return exitStatus
 	}
 
-	exitStatus = io.UpdateProjectContextSymlinkToUnselected(projectName)
+	exitStatus = io.UpdateProjectContextSymlink(projectName, contextSelectArgs.ContextName)
 	if exitStatus > 0 {
 		return exitStatus
 	}
 
+	fmt.Printf("selected context '%s' for project '%s'\n", contextSelectArgs.ContextName, projectName)
+
 	return 0
 }
 
-func (c *ContextRemoveCommand) Synopsis() string {
-	return "Remove a context from a project"
+func (c *ContextSelectCommand) Synopsis() string {
+	return "Select a context for a project"
 }

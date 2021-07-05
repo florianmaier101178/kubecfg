@@ -6,9 +6,7 @@ import (
 )
 
 type ContextRemoveArguments struct {
-	ContextName          config.Context
-	ProjectName          string
-	ProjectNameAvailable bool
+	ProjectNameAndContextArguments
 }
 
 func ParseContextRemoveArguments(args []string) (*ContextRemoveArguments, error) {

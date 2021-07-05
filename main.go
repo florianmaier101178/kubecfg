@@ -27,6 +27,15 @@ func main() {
 		"context remove": func() (cli.Command, error) {
 			return &command.ContextRemoveCommand{}, nil
 		},
+		"context show": func() (cli.Command, error) {
+			return &command.ContextShowCommand{}, nil
+		},
+		"context select": func() (cli.Command, error) {
+			return &command.ContextSelectCommand{}, nil
+		},
+		"context unselect": func() (cli.Command, error) {
+			return &command.ContextUnselectCommand{}, nil
+		},
 		"dump": func() (cli.Command, error) {
 			return &command.DumpCommand{}, nil
 		},

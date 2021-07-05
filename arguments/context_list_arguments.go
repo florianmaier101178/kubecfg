@@ -5,8 +5,7 @@ import (
 )
 
 type ContextListArguments struct {
-	ProjectName          string
-	ProjectNameAvailable bool
+	ProjectNameArgument
 }
 
 func ParseContextListArguments(args []string) (*ContextListArguments, error) {

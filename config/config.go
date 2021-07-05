@@ -96,6 +96,20 @@ func (c *Config) GetProject(projectName string) (*Project, error) {
 	return &Project{}, errors.New(fmt.Sprintf("No project found for projectName: '%s'\n", projectName))
 }
 
+func (c *Config) GetSelectedProject() (*Project, error) {
+	err := errors.New("There is no selected project available")
+
+	if !c.HasSelectedProject() {
+		return nil, err
+	}
+	for _, project := range c.Projects {
+		if c.SelectedProject == project.Name {
+			return &project, nil
+		}
+	}
+	return nil, err
+}
+
 func (c *Config) UpdateProject(updatedProject Project) (*Config, error) {
 	existingProject, _ := c.ExistingProject(updatedProject.Name)
 	if existingProject {

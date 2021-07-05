@@ -7,34 +7,28 @@ import (
 	"strings"
 )
 
-type ContextRemoveCommand struct {
+type ContextUnselectCommand struct {
 }
 
-func (c *ContextRemoveCommand) Help() string {
+func (c *ContextUnselectCommand) Help() string {
 	helpText := `
-Usage: kubecfg context remove NAME [options]
+Usage: kubecfg context unselect NAME
 
-  Remove a context from a project.
+  Unselect context choice for a project.
   If this command is called parameterless, than the selected project (if a project is selected) is used.
-  If an optional parameter with an project name is passed in, than for this project the context will be removed.
-
-Options:
-
--project=string			Name of project, e.g. "business"
+  If an optional parameter with an project name is passed in, than for this project the context will be unselected.
 `
 	return strings.TrimSpace(helpText)
 }
 
-func (c *ContextRemoveCommand) Run(args []string) int {
-	contextRemoveArgs, err := arguments.ParseContextRemoveArguments(args)
+func (c *ContextUnselectCommand) Run(args []string) int {
+	contextUnselectArgs, err := arguments.ParseContextUnselectArguments(args)
 	if err != nil {
 		fmt.Println(err)
 		fmt.Println()
 		fmt.Println(c.Help())
 		return 1
 	}
-
-	fmt.Printf("remove context '%s' from project '%s'\n", contextRemoveArgs.ContextName, contextRemoveArgs.ProjectName)
 
 	if io.IllegalConfigurationSetup() {
 		fmt.Println("kubecfg is not properly configured")
@@ -48,14 +42,20 @@ func (c *ContextRemoveCommand) Run(args []string) int {
 	}
 
 	var projectName string //from here on use projectName instead of contextRemoveArgs.ProjectName
-	if contextRemoveArgs.ProjectNameAvailable{
-		projectName = contextRemoveArgs.ProjectName
+	if contextUnselectArgs.ProjectNameAvailable{
+		projectName = contextUnselectArgs.ProjectName
 	} else {
-		projectName, err = determineProjectName(contextRemoveArgs, config)
+		projectName, err = determineProjectName(contextUnselectArgs, config)
 		if err != nil {
 			fmt.Println(err)
 			return 1
 		}
+	}
+
+	existingProject, _ := config.ExistingProject(projectName)
+	if !existingProject {
+		fmt.Printf("No project with name: '%s' available for usage\n", projectName)
+		return 1
 	}
 
 	project, err := config.GetProject(projectName)
@@ -64,13 +64,7 @@ func (c *ContextRemoveCommand) Run(args []string) int {
 		return 1
 	}
 
-	updatedProject, err := project.RemoveContext(contextRemoveArgs.ContextName)
-	if err != nil {
-		fmt.Println(err)
-		return 1
-	}
-
-	updatedConfig, err := config.UpdateProject(*updatedProject)
+	updatedConfig, err := config.UpdateProject(*project.UnselectContext())
 	if err != nil {
 		fmt.Println(err)
 		return 1
@@ -86,9 +80,11 @@ func (c *ContextRemoveCommand) Run(args []string) int {
 		return exitStatus
 	}
 
+	fmt.Printf("context selection unset for project '%s'\n", projectName)
+
 	return 0
 }
 
-func (c *ContextRemoveCommand) Synopsis() string {
-	return "Remove a context from a project"
+func (c *ContextUnselectCommand) Synopsis() string {
+	return "Unselect context choice for a project"
 }

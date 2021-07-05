@@ -36,7 +36,7 @@ func (p *Project) RemoveContext(context Context) (*Project, error) {
 	if existingContext {
 		p.Contexts = append(p.Contexts[:i], p.Contexts[i+1:]...)
 		if p.SelectedContext == context {
-			p.unselectContext()
+			p.UnselectContext()
 		}
 		return p, nil
 	}
@@ -72,7 +72,7 @@ func (p *Project) SelectContext(context Context) (*Project, error) {
 		fmt.Sprintf("given context: '%s' not existing for project: '%s'", context, p.Name))
 }
 
-func (p *Project) unselectContext() *Project {
+func (p *Project) UnselectContext() *Project {
 	if p.SelectedContext != unselected {
 		p.SelectedContext = unselected
 	}

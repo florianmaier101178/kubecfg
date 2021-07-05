@@ -1,6 +1,19 @@
 package arguments
 
-import "errors"
+import (
+	"errors"
+	"kubecfg/config"
+)
+
+type ProjectNameArgument struct {
+	ProjectName          string
+	ProjectNameAvailable bool
+}
+
+type ProjectNameAndContextArguments struct {
+	ProjectNameArgument
+	ContextName          config.Context
+}
 
 func extractProjectName(args []string) (string, error) {
 	for i, value := range args {
