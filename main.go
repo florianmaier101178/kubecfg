@@ -8,7 +8,7 @@ import (
 	"github.com/mitchellh/cli"
 )
 
-const version = "1.0.0"
+const version = "1.1.0"
 
 func main() {
 	c := cli.NewCLI("kubecfg", version)

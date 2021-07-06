@@ -30,7 +30,11 @@ func (p *ProjectListCommand) Run(args []string) int {
 
 	fmt.Println("available projects:")
 	for _, name := range config.GetProjectNames() {
-		fmt.Printf("  %s\n", name)
+		if name == config.SelectedProject {
+			fmt.Printf(" *%s\n", name)
+		} else {
+			fmt.Printf("  %s\n", name)
+		}
 	}
 	fmt.Println()
 
